@@ -1,4 +1,4 @@
-import express, { Response, Request, NextFunction } from 'express';
+import express from 'express';
 import http from 'http';
 import io, { Socket } from 'socket.io';
 import cors from 'cors';
@@ -10,12 +10,11 @@ let server = http.createServer(app);
 let sio = new io.Server(server, { cors: { origin: '*' } });
 
 app.use(cors());
-app.get('/', (req: Request, res: Response) => res.send('hi'));
 
 sio.on('connection', (socket: Socket) => {
   socket.emit('initial', 'connected');
 
-  socket.on('room id', (roomId: string) => {
+  socket.on('join room', (roomId: string) => {
     socket.join(roomId);
     socket.to(roomId).emit('response', `connected to room ${roomId}`);
   });
